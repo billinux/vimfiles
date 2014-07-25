@@ -394,7 +394,7 @@ filetype plugin indent on
 
 
 " Vimrc"{
-" -----
+" ---------------------------------------
 
 augroup vimrc
     autocmd!
@@ -408,7 +408,7 @@ augroup END
 "}
 
 " Text"{
-" ----
+" ---------------------------------------
 
 augroup Text
     au!
@@ -426,7 +426,7 @@ augroup END
 "}
 
 " Programming"{
-" -----------
+" ---------------------------------------
 
 augroup Programming
     au BufRead,BufNewFile *.html set shiftwidth=2
@@ -437,7 +437,7 @@ augroup END
 "}
 
 " Number"{
-" ------
+" ---------------------------------------
 
 augroup Number
     au!
@@ -449,7 +449,7 @@ augroup END
 "}
 
 " Autoview"{
-" --------
+" ---------------------------------------
 
 augroup Autoview
     au!
@@ -460,7 +460,7 @@ augroup END
 "}
 
 " Misc"{
-" ----
+" ---------------------------------------
 
 augroup Misc
     " Save when losing focus
@@ -774,7 +774,7 @@ set smarttab
 " =====================================
 
 " Leader"{
-" =-=-=-
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 let mapleader=","
 let g:mapleader=","
@@ -788,7 +788,7 @@ xnoremap ; <Nop>
 "}
 
 " Mapmode-Fn"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Map <F11> to / (search) and Ctrl-<F11> to ? (backwards search)
 map <F11> /
@@ -800,7 +800,7 @@ set pastetoggle=<F12>
 "}
 
 " Mapmode-n"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Unmap arrow keys
 noremap <Up> <c-W>k
@@ -841,7 +841,7 @@ nnoremap N Nzz
 "}
 
 " Mapmode-i"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Keep hands on the keyboard
 inoremap jj <ESC>
@@ -851,7 +851,7 @@ inoremap kj <ESC>
 "}
 
 " Mapmode-v"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Indent multiple lines with TAB
 vmap <Tab> >
@@ -862,7 +862,7 @@ vnoremap > >gv
 "}
 
 " Mapmode-nv"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Yank to Clipboard 
 nnoremap <C-y> "+y
@@ -873,7 +873,7 @@ vnoremap <Space> zf
 "}
 
 " Mapmode-nvo"{
-" =-=-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Window navigation
 map <C-j> <C-W>j
@@ -891,14 +891,14 @@ map <Leader>= <C-w>=
 "}
 
 " Mapmode-c"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " write to a file using sudo
 cmap w!! %!sudo tee > /dev/null %
 "}
 
 " Mapmode-o"{
-" =-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
 "}
