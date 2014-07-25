@@ -114,7 +114,7 @@ NeoBundleFetch 'shougo/neobundle.vim'
 "}
 
 " Install dependencies"{
-" --------------------
+" ---------------------------------------
 "
 " Required to run vimshell interactively
 NeoBundle 'shougo/vimproc.vim', {
@@ -142,7 +142,7 @@ endif
 "}
 
 " Install bundles"{
-" --------------
+" ---------------------------------------
 
 " .vimrc.before.local config"{
 
@@ -158,15 +158,15 @@ endif
 "}
 
 " Bundle groups"{
-" -------------
+" ---------------------------------------
 
 " To prevent installation of extra bundles
 " let g:billinux_no_extra_bundles = 1
 
 if !exists("g:override_billinux_bundles")
 
-    " General"{
-    " -------
+    " CATEGORY: General"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'general')
         NeoBundle 'scrooloose/nerdtree'
@@ -206,10 +206,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Writing"{
-    " -------
-
-
+    " CATEGORY: Writing"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'writing')
         NeoBundle 'reedes/vim-litecorrect'
@@ -220,8 +218,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " General programming"{
-    " -------------------
+    " CATEGORY: General programming"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'programming')
         NeoBundle 'mattn/emmet-vim'
@@ -240,8 +238,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Snippets & AutoComplete"{
-    " -----------------------
+    " CATEGORY: Snippets & AutoComplete"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'snipmate')
         NeoBundle 'garbas/vim-snipmate'
@@ -269,8 +267,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " PHP"{
-    " ---
+    " CATEGORY: PHP"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'php')
         NeoBundle 'spf13/PIV'
@@ -281,8 +279,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Python"{
-    " ------
+    " CATEGORY: Python"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'python')
         if executable('python')
@@ -292,8 +290,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Javascript"{
-    " ----------
+    " CATEGORY: Javascript"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'javascript')
         NeoBundle 'pangloss/vim-javascript'
@@ -303,8 +301,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " HTML"{
-    " ----
+    " CATEGORY: HTML"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'html')
         NeoBundle 'digitaltoad/vim-jade'
@@ -317,16 +315,16 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Twig template"{
-    " -------------
+    " CATEGORY: Twig template"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'twig')
         NeoBundle 'beyondwords/vim-twig'
     endif
 "}
 
-    " CSS"{
-    " ---
+    " CATEGORY: CSS"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'css')
         NeoBundle 'lilydjwg/colorizer'
@@ -335,8 +333,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Ruby"{
-    " ----
+    " CATEGORY: Ruby"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'ruby')
         if executable('ruby')
@@ -348,8 +346,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Colorschemes"{
-    " ------------
+    " CATEGORY: Colorschemes"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'colors')
         NeoBundle 'altercation/vim-colors-solarized'
@@ -362,8 +360,8 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " Misc"{
-    " ----
+    " CATEGORY: Misc"{
+" ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'misc')
         NeoBundle 'tpope/vim-markdown'
