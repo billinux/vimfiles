@@ -395,7 +395,6 @@ augroup vimrc
     autocmd!
 augroup END
 
-
 "augroup VIMRC
 "    au!
 "    autocmd BufWritePost  ~/.vimrc source ~/.vimrc
