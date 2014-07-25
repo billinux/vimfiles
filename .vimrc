@@ -601,7 +601,7 @@ let ruby_operators = 1
 " =====================================
 
 " Gui setting"{
-" =-=-=-=-=-=
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 if s:isgui
     set antialias
@@ -646,7 +646,7 @@ set ttyfast
 "}
 
 " Appearance"{
-" ----------
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 set background=dark
 set number
@@ -663,7 +663,7 @@ autocmd WinEnter * setlocal cursorline
 "}
 
 " Behavior"{
-" --------
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 set backspace=indent,eol,start
 set viewdir=$VIMHOME/.cache/view
@@ -734,7 +734,7 @@ endif
 "}
 
 " Search"{
-" --------
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 "noremap / /\v
 "noremap / /\v
@@ -749,7 +749,7 @@ set matchtime=2
 "}
 
 " Errors"{
-" --------------
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 set noerrorbells
 set novisualbell
@@ -758,7 +758,7 @@ set timeoutlen=500
 "}
 
 " Indent"{
-" --------
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 set expandtab
 set shiftwidth=4
