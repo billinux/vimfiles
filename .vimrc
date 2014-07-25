@@ -1,8 +1,6 @@
 " SECTION: Notes"{
 " =====================================
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker:
-
-
 "}
 
 " SECTION: Initialize"{
@@ -68,7 +66,6 @@ endif
 if !s:iswin
     set shell=/bin/bash
 endif
-
 "}
 
 " CATEGORY: Private"{
@@ -1094,13 +1091,6 @@ if isdirectory(expand($VIMBUNDLE . "/vim-airline"))
         let g:airline_powerline_fonts = 1
     endif
 
-    "let g:bufferline_echo=0
-    "let g:airline_left_sep = '»'
-    "let g:airline_left_sep = '▶'
-    "let g:airline_right_sep = '«'
-    "let g:airline_right_sep = '◀'
-    "let g:airline_enable_branch     = 1
-    "let g:airline_enable_syntastic  = 1
 endif
 "}
 
@@ -1622,7 +1612,7 @@ endif
 "}
 
 " Python"{
-" =-=-=-
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " PLUGIN: PyMode
 " -------------------------------------
@@ -1675,7 +1665,7 @@ endif
 "}
 
 " Twig"{
-" =-=-
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
 "}
@@ -1739,6 +1729,9 @@ if isdirectory(expand($VIMBUNDLE . "/vim-thematic"))
 
 else
 
+" Colorschemes
+" -------------------------------------
+
     " In your .vimrc.before.local file
     " list only the color groups you will use
     if !exists('g:billinux_color_groups')
@@ -1746,6 +1739,8 @@ else
     endif
 
 
+    " Molokai theme
+    " ---------------
     if count(g:billinux_color_groups, 'molokai')
         if isdirectory(expand($VIMBUNDLE . "/molokai"))
             let g:molokai_original = 1
@@ -1753,6 +1748,8 @@ else
         endif
     endif
 
+    " Solarized theme
+    " ---------------
     if count(g:billinux_color_groups, 'solarized')
         if isdirectory(expand($VIMBUNDLE . "/vim-colors-solarized"))
             let g:solarized_termcolors=256
@@ -1800,14 +1797,12 @@ if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
 
-
 " Use local gvimrc if available and gui is running
 if has('gui_running')
     if filereadable(expand("~/.gvimrc"))
         source ~/.gvimrc
     endif
 endif
-
 
 " Use local gvimrc if available and gui is running
 if has('gui_running')
@@ -1821,14 +1816,14 @@ endif
 " =====================================
 
 " Variables"{
-" ---------
+" -------------------------------------
 
 " To list all environment variables used by VIM
 " :echo $<C-D>
 "}
 
 " Indent"{
-" -----------
+" -------------------------------------
 
 " Vjj>  :To indent a code block
 " >%    : Increase indent of a braced or bracketed block (cursor on first brace)
@@ -1836,9 +1831,6 @@ endif
 " %>    : Decrease indent of a braced or bracketed block (cursor on first brace)
 " 5>>   : Indent 5 lines
 "}
-
-
-
 
 set secure  " must be written at the last.  see :help 'secure'
 "}
