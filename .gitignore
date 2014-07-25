@@ -1,0 +1,5 @@
+bundle/
+session.vim
+tmp/
+.cache/
+*.bak

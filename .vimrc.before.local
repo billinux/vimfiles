@@ -1,0 +1,15 @@
+
+" let g:billinux_bundle_groups=['general', 'writing', 'neocomplcache', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'twig', 'css', 'colors', 'misc',]
+let g:billinux_bundle_groups=['general', 'neocomplcache', 'programming', 'php', 'html', 'css', 'colors', 'misc',]
+"
+" To override all the included bundles
+" let g:override_billinux_bundles = 1
+
+" Disable extra bundles installation
+let g:billinux_no_extra_bundles = 1
+
+
+" Select ONE coloscheme for your Vim config
+" let g:billinux_color_groups=['molokai', 'solarized',]
+let g:billinux_color_groups=['molokai',]
+"let g:billinux_color_groups=['solarized',]
