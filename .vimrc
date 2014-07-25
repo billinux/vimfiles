@@ -383,12 +383,10 @@ endif
 
 filetype plugin indent on
 :NeoBundleCheck
-
 "}
 
 " SECTION: Autocommands"{
 " =====================================
-
 
 " Vimrc"{
 " ---------------------------------------
@@ -464,7 +462,6 @@ augroup Misc
     au FocusLost * :wa
 augroup END
 "}
-
 "}
 
 " SECTION: Functions"{
@@ -539,7 +536,6 @@ function! MakeViewCheck()"{
     return 1
 endfunction
 "}
-
 "}
 
 " SECTION: Encoding"{
@@ -561,7 +557,6 @@ else
     scriptencoding utf-8
     set fileformat=unix
 endif
-
 "}
 
 " SECTION: Syntax"{
@@ -591,7 +586,6 @@ let g:is_bash = 1
 
 " ft-ruby-syntax
 let ruby_operators = 1
-
 "}
 
 " SECTION: Options"{
@@ -639,7 +633,6 @@ else
 endif
 
 set ttyfast
-
 "}
 
 " Appearance"{
@@ -656,7 +649,6 @@ set noshowmode
 set cursorline
 autocmd WinLeave * setlocal nocursorline
 autocmd WinEnter * setlocal cursorline
-
 "}
 
 " Behavior"{
@@ -733,8 +725,6 @@ endif
 " Search"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-"noremap / /\v
-"noremap / /\v
 set hlsearch
 set incsearch
 set ignorecase
@@ -763,8 +753,6 @@ set tabstop=4
 set softtabstop=4
 set smarttab
 "}
-
-
 "}
 
 " SECTION: Mappings"{
@@ -781,7 +769,6 @@ nnoremap , <Nop>
 xnoremap , <Nop>
 nnoremap ; <Nop>
 xnoremap ; <Nop>
-
 "}
 
 " Mapmode-Fn"{
@@ -835,6 +822,8 @@ nnoremap < <<
 nnoremap n nzz
 nnoremap N Nzz
 
+"noremap / /\v
+"noremap / /\v
 "}
 
 " Mapmode-i"{
@@ -896,8 +885,6 @@ cmap w!! %!sudo tee > /dev/null %
 
 " Mapmode-o"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-
 "}
 
 "}
@@ -969,7 +956,7 @@ if isdirectory(expand($VIMBUNDLE . "/ctrlp"))
     let g:ctrlp_mruf_max = 250
 
     " On Windows use 'dir' as fallback command.
-    if WINDOWS()
+    if s:iswin
         let s:ctrlp_fallback = 'dir %s /-n /b /s /a-d'
     elseif executable('ag')
         let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
