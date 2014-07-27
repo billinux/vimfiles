@@ -5,6 +5,9 @@
 " This my personal .vimrc, I don't recommend you copy it, just
 " use the pieces you want (and understands!). When you copy a
 " .vimrc in the entirety, weird and unexpexted things can happen
+"
+" You can use ~/.vimrc.before.local and ~/.vimrc.private
+" for your local and private settings
 "}
 
 " SECTION: Initialize"{
@@ -179,13 +182,16 @@ endif
 " To override all the included bundles, add the following to your
 " .vimrc.bundles.local file:
 "   let g:override_billinux_bundles = 1
+
+" Disable extra bundles installation
+"let g:billinux_no_extra_bundles = 1
 "}
 
 " Bundle groups"{
 " ---------------------------------------
 
 " To prevent installation of extra bundles
-" let g:billinux_no_extra_bundles = 1
+let g:billinux_no_extra_bundles = 1
 
 if !exists("g:override_billinux_bundles")
 
@@ -667,7 +673,6 @@ let ruby_operators = 1
 
 if s:is_running_gui
     set antialias
-    set mousehide
     set lines=60
     set columns=120
 
@@ -694,8 +699,26 @@ if s:is_running_gui
     elseif s:is_running_win
         set guifont=Powerline_Consolas:h10:cANSI
     endif
+
 elseif s:is_using_term_dterm
     set tsl=0
+
+elseif s:is_using_term_rxvt
+    " t_SI start insert mode (bar cursor shape)
+    " t_EI end insert mode (block cursor shape)
+    let &t_SI = "\033]12;red\007"
+    let &t_EI = "\033]12;green\007"
+
+    :silent !echo -ne "\033]12;green\007"
+    autocmd VimLeave * :silent :!echo -ne "\033]12;green\007"
+
+elseif s:is_using_term_screen
+    let &t_SI = "\033P\033]12;red\007\033\\"
+    let &t_EI = "\033P\033]12;green\007\033\\"
+
+    :silent !echo -ne "\033P\033]12;green\007\033\\"
+    autocmd VimLeave * :silent :!echo -ne "\033P\033]12;green\007\033\\"
+
 elseif isdirectory(expand($VIMBUNDLE . "/csapprox"))
     " To avoid CSApprox workarounds in console
     " disable CSApprox
@@ -739,7 +762,7 @@ set textwidth=0
 set whichwrap=b,s,h,l,<,>,[,]
 set title
 set virtualedit=onemore
-set mouse=a
+"set mouse=a
 
 set wildmenu
 set wildmode=list:longest,full
@@ -1844,37 +1867,45 @@ endif
 
 " Themes defined
 
-if isdirectory(expand($VIMBUNDLE . "/vim-thematic"))
-    " All themes are defines here
-    let g:thematic#themes = {
-    \ 'molokai' :   {'colorscheme': 'molokai',
-    \                'airline-theme': 'molokai'
-    \               },
-    \
-    \ 'solarized' : {'colorscheme': 'solarized',
-    \                'airline-theme': 'solarized'
-    \               },
-    \ }
+" Disable thematic bundle
+let g:override_billinux_thematic_bundle=1
+" Enable a colorscheme
+"let g:billinux_color_groups=['solarized',]
+let g:billinux_color_groups=['molokai',]
 
-    " Default values to be shared by all defined themes
-    let g:thematic#defaults = {
-    \ 'background': 'dark',
-    \ 'laststatus': 2,
-    \ }
+if !exists("g:override_billinux_thematic_bundle")
+    if isdirectory(expand($VIMBUNDLE . "/vim-thematic"))
+        " All themes are defines here
+        let g:thematic#themes = {
+        \ 'molokai' :   {'colorscheme': 'molokai',
+        \                'airline-theme': 'molokai'
+        \               },
+        \
+        \ 'solarized' : {'colorscheme': 'solarized',
+        \                'airline-theme': 'solarized'
+        \               },
+        \ }
 
-    " Additional options for GUI
-    let g:thematic#themes ={
-    \ 'molokai' :   {'typeface': 'Source Code Pro Light',
-    \                'font-size': 12
-    \               }
-    \ }
+        " Default values to be shared by all defined themes
+        let g:thematic#defaults = {
+        \ 'background': 'dark',
+        \ 'laststatus': 2,
+        \ }
 
-    " Setting an initial theme
-    let g:thematic#theme_name = 'molokai'
+        " Additional options for GUI
+        let g:thematic#themes ={
+        \ 'molokai' :   {'typeface': 'Source Code Pro Light',
+        \                'font-size': 12
+        \               }
+        \ }
 
-    " Themes keymap
-    nnoremap <leader>S :Thematic solarized<CR>
-    nnoremap <leader>M :Thematic molokai<CR>
+        " Setting an initial theme
+        let g:thematic#theme_name = 'molokai'
+
+        " Themes keymap
+        nnoremap <leader>S :Thematic solarized<CR>
+        nnoremap <leader>M :Thematic molokai<CR>
+    endif
 
 else
 
