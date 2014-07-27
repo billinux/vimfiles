@@ -1,6 +1,6 @@
 " SECTION: Notes"{
 " =====================================
-" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker:
+" vim:set ft=vim
 "}
 
 " SECTION: Initialize"{
@@ -146,7 +146,7 @@ endif
 " In your .vimrc.before.local file
 " list only the plugin groups you will use
 if !exists('g:billinux_bundle_groups')
-    let g:billinux_bundle_groups=['general', 'writing', 'neocomplcache', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'twig', 'css', 'colors', 'misc',]
+    let g:billinux_bundle_groups=['general', 'writing', 'neocomplcache', 'programming', 'php', 'sql', 'ruby', 'python', 'javascript', 'html', 'twig', 'css', 'colors', 'misc',]
 endif
 
 " To override all the included bundles, add the following to your
@@ -182,17 +182,17 @@ if !exists("g:override_billinux_bundles")
         NeoBundle 'matchit.zip'
         NeoBundle 'mbbill/undotree'
         NeoBundle 'Lokaltog/vim-easymotion'
+        NeoBundle 'mhinz/vim-signify'
+        NeoBundle 'spf13/vim-autoclose'
 
         if !exists('g:billinux_no_extra_bundles')
             NeoBundle 'tpope/vim-repeat'
             NeoBundle 'vim-scripts/figlet.vim'
-            NeoBundle 'spf13/vim-autoclose'
             NeoBundle 'terryma/vim-multiple-cursors'
             NeoBundle 'vim-scripts/restore_view.vim'
             NeoBundle 'vim-scripts/sessionman.vim'
             NeoBundle 'jistr/vim-nerdtree-tabs'
             NeoBundle 'nathanaelkane/vim-indent-guides'
-            NeoBundle 'mhinz/vim-signify'
             NeoBundle 'tpope/vim-abolish.git'
             NeoBundle 'osyo-manga/vim-over'
             NeoBundle 'kana/vim-textobj-user'
@@ -274,6 +274,15 @@ if !exists("g:override_billinux_bundles")
             NeoBundle 'arnaud-lb/vim-php-namespace'
         endif
     endif
+"}
+
+" CATEGORY: SQL"{
+" -------------------------------------
+if count(g:billinux_bundle_groups, 'sql')
+if !exists('g:billinux_no_extra_bundles')
+NeoBundle 'vim-scripts/dbext.vim'
+endif
+endif
 "}
 
     " CATEGORY: Python"{
@@ -427,6 +436,8 @@ augroup Programming
     au BufRead,BufNewFile *.html set softtabstop=2
     au BufRead,BufNewFile *.html set tabstop=2
     au FileType c,cpp,java,go,php,javascript,python,twig,xml,yml,perl autocmd BufWritePre <buffer> if !exists('g:billinux_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
+    au BufRead * normal zR
+    au BufRead *.vimrc normal zM
 augroup END
 "}
 
@@ -459,6 +470,7 @@ augroup END
 augroup Misc
     " Save when losing focus
     au FocusLost * :wa
+    au BufWritePost * call ModeChange()
 augroup END
 "}
 "}
@@ -533,6 +545,14 @@ function! MakeViewCheck()"{
     endfor
 
     return 1
+endfunction
+"}
+
+function ModeChange()"{
+"Donne les droits d'exécution si le fichier commence par #!
+    if getline(1) =~ "#!"
+        silent !chmod a+x <afile>
+    endif
 endfunction
 "}
 "}
@@ -672,7 +692,11 @@ set wildignorecase
 set wildignore+=*.swp,*.bak,*.pyc,*.class,*.o,*.obj,tags,*.bak,*~
 
 set foldenable
-"set foldlevelstart=0
+set foldmarker={,}
+set foldmethod=marker
+set foldlevelstart=0
+set foldopen-=Search
+set foldopen-=undo
 
 " VERY useful to restore view
 set viewoptions=folds,options,cursor,unix,slash
@@ -799,8 +823,8 @@ noremap L $
 nnoremap <silent> k :<C-U>execute 'normal!' (v:count>1 ? "m'".v:count.'k' : 'gk')<Enter>
 nnoremap <silent> j :<C-U>execute 'normal!' (v:count>1 ? "m'".v:count.'j' : 'gj')<Enter>
 
-nnoremap q :q!<cr>
-nnoremap <leader>q :qa!<cr>
+"nnoremap q :q!<cr>
+"nnoremap <leader>q :qa!<cr>
 
 " To clear search highlighting rather than toggle it and off
 noremap <silent> <leader><space> :nohlsearch<CR>
@@ -855,21 +879,29 @@ vnoremap <C-y> "+y
 
 nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 vnoremap <Space> zf
+
+" Close all folds except the one(1) the cursor is on, and center.
+nnoremap z1 zMzvzz
+
+" Make zO (not zero) recursively open whatever top level fold we're in, no
+" matter where the cursor happens to be, and center.
+nnoremap zO zCzOzz
+
 "}
 
 " Mapmode-nvo"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Window navigation
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
 
-"map <C-J> <C-W>j<C-W>_
-"map <C-k> <C-W>k<C-W>_
-"map <C-h> <C-W>h<C-W>_
-"map <C-l> <C-W>l<C-W>_
+map <C-J> <C-W>j<C-W>_
+map <C-k> <C-W>k<C-W>_
+map <C-h> <C-W>h<C-W>_
+map <C-l> <C-W>l<C-W>_
 
 " Adjust viewports to the same size
 map <Leader>= <C-w>=
@@ -888,7 +920,19 @@ cmap w!! %!sudo tee > /dev/null %
 
 "}
 
+" SECTION: Macros"{
+" =====================================
+
+let @a = 'i" =====================================O" SECTION: 5j'
+let @b = 'i" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=O" CATEGORY: 5j'
+let @c = 'i" -------------------------------------O" PLUGIN: 5j'
+let @d = 'i" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=O" 5j'
+let @e = 'i" -------------------------------------O" 5j'
+
+"}
+
 " SECTION: Plugins"{
+"
 " =====================================
 
 " CATEGORY: General"{
@@ -900,10 +944,10 @@ cmap w!! %!sudo tee > /dev/null %
 if isdirectory(expand($VIMBUNDLE . "/nerdtree"))
     let g:NERDShutUp=1
     let NERDTreeIgnore=['\~$', '\.swp$', '\.git']
-    imap <leader>e :NERDTreeToggle<cr>
-    nmap <leader>e :NERDTreeToggle<cr>
-    imap <leader>nt :NERDTreeFind<cr>
-    nmap <leader>nt :NERDTreeFind<cr>
+    imap <leader>t :set columns=999<CR>:NERDTreeToggle<cr>
+    nmap <leader>t :set columns=999<CR>:NERDTreeToggle<cr>
+    imap <leader>T :set columns=999<CR>:NERDTreeFind<cr>
+    nmap <leader>T :set columns=999<CR>:NERDTreeFind<cr>
 
     let NERDTreeShowBookmarks=1
     let NERDTreeIgnore=['\.pyc', '\~$', '\.swp$', '\.git', '\.hg', '\.svn']
@@ -983,6 +1027,19 @@ if isdirectory(expand($VIMBUNDLE . "/ctrlp"))
         nnoremap <Leader>fu :CtrlPFunky<Cr>
     endif
 
+endif
+"}
+
+" APPLICATION: ag: the silver searcher"{
+" -------------------------------------"
+if executable('ag')
+    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+    " ag is fast enough that CtrlP doesn't need to cache
+    let g:ctrlp_use_caching = 0
+    let g:ackprg = 'ag --smart-case --nogroup --nocolor --column'
+    set grepprg=ag\ --nogroup\ --nocolor
 endif
 "}
 
@@ -1084,6 +1141,10 @@ endif
 " -------------------------------------
 
 if isdirectory(expand($VIMBUNDLE . "/matchit.zip"))
+    " Load matchit.vim, but only if the user hasn't installed a newer version.
+    if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+        runtime! macros/matchit.vim
+    endif
     let b:match_ignorecase = 1
 endif
 "}
@@ -1144,6 +1205,18 @@ if isdirectory(expand($VIMBUNDLE . "/vim-indent-guides"))
 endif
 "}
 
+" PLUGIN: Signify"{
+" -------------------------------------
+
+" Try ]c and [c to jump between hunks
+if isdirectory(expand($VIMBUNDLE . "/vim-signify"))
+    let g:signify_sign_change='~'
+    let g:signify_sign_delete='-'
+    let g:signify_sign_overwrite=0    " prevent dumping gutter
+    let g:signify_update_on_focusgained=1    " dumps gutter if overwrite=1
+    let g:signify_sign_color_inherit_from_linenr=1
+endif
+"}
 "}
 
 " CATEGORY: Writing"{
@@ -1592,6 +1665,26 @@ endif
 
 "}
 
+" CATEGORY: SQL"{
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+" PLUGIN: Dbext"{
+" -------------------------------------
+
+" https://mutelight.org/dbext-the-last-sql-client-youll-ever-need
+" Set your connection profil in ~/.vimrc.before.private
+" MySQL
+" let g:dbext_default_profile_mysql_local = 'type=MYSQL:user=root:passwd=whatever:dbname=mysql'
+" " SQLite
+" let g:dbext_default_profile_sqlite_for_rails = 'type=SQLITE:dbname=/path/to/my/sqlite.db'
+" " Microsoft SQL Server
+" let g:dbext_default_profile_microsoft_production = 'type=SQLSRV:user=sa:passwd=whatever:host=localhost'
+" Open a sql file, move your cursor anywhere and <leader>sel (sql execute line)
+if isdirectory(expand($VIMBUNDLE . "/dbext.vim"))
+endif
+"}
+"}
+
 " CATEGORY: Ruby"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -1680,6 +1773,8 @@ endif
 
 " PLUGIN: Thematic"{
 " -------------------------------------
+
+" Themes defined
 
 if isdirectory(expand($VIMBUNDLE . "/vim-thematic"))
     " All themes are defines here
@@ -1801,6 +1896,8 @@ endif
 " SECTION: Tips"{
 " =====================================
 
+" CTRL-Q : visual block selection
+
 " Variables"{
 " -------------------------------------
 
@@ -1816,6 +1913,36 @@ endif
 " =%    : Reindent a braced or bracketed block (cursor on first brace)
 " %>    : Decrease indent of a braced or bracketed block (cursor on first brace)
 " 5>>   : Indent 5 lines
+"}
+
+" Macros"{
+" -------------------------------------
+" http://blog.sanctum.geek.nz/advanced-vim-macros/
+" Saving vim macros into .vimrc
+" From normal mode: qa
+" Enter whatever commands you want
+" From normal mode: q
+" Open .vimrc
+" "ap to insert the macro into your let @a='...' line
+" Apply the 'a' macros 10 times: 10@a
+" Applies:
+" :normal @a
+" :% normal @a
+" :10,20 normal @a
+" :'<,'> normal @a (on the lines in the current visual selection
+" :g/vim/ normal @a (on the lines containing 'vim' pattern
+" On a function with key mapping
+"function! CalculateAge()
+"    normal 03wdei^R=2012-^R"^M^[0j 
+"endfunction 
+" nnoremap <leader>a :call CalculateAge()<CR>
+" To show your 'a' macro: "ap
+" Modify whatever you want in that macro and : ^"ay$ to insert changes into
+" the "a"register
+
+" You can acces into the Vim registers :reg
+
+
 "}
 
 set secure  " must be written at the last.  see :help 'secure'
