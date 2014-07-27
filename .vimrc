@@ -1,6 +1,10 @@
 " SECTION: Notes"{
 " =====================================
 " vim:set ft=vim
+"
+" This my personal .vimrc, I don't recommend you copy it, just
+" use the pieces you want (and understands!). When you copy a
+" .vimrc in the entirety, weird and unexpexted things can happen
 "}
 
 " SECTION: Initialize"{
@@ -10,7 +14,7 @@
 set nocompatible
 filetype off
 
-" CATEGORY: Vim startup"{
+" CATEGORY: Startup"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 if !has('vim_starting')
@@ -19,26 +23,49 @@ if !has('vim_starting')
   let &runtimepath = s:tmp
   unlet s:tmp
 endif
+
+" The vim cursor can be changed in the insert mode according
+" control sequences when a user enters(t_SI) and leaves(t_EI)
+let &t_SI .= "\e[3 q"
+let &t_EI .= "\e[1 q"
+
 "}
 
 " CATEGORY: Environment"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-let s:iswin32 = has('win32')
-let s:iswin64 = has('win64')
-let s:iswin = has('win32') || has('win64')
+let s:is_running_win32 = has('win32')
+let s:is_running_win64 = has('win64')
+let s:is_running_win = has('win32') || has('win64')
 
-let s:linux = has('unix') && !has('macunix') && !has('win32unix')
-let s:ismacunix = has("macunix")
-let s:iscygwin = has('win32unix')
+let s:is_running_linux = has('unix') && !has('macunix') && !has('win32unix')
+let s:is_running_macunix = has("macunix")
+let s:is_running_cygwin = has('win32unix')
 
-let s:isgui = has("gui_running")
+let s:is_running_gui = has("gui_running")
 "}
 
-" CATEGORY: OS Settings"{
+" CATEGORY: Terminal"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-if s:iswin
+let s:is_using_term_xterm = &term =~ "xterm"
+let s:is_using_term_dterm = &term =~ "dterm"
+let s:is_using_term_rxvt = &term =~ "rxvt"
+let s:is_using_term_screen = &term =~ "screen"
+let s:is_using_term_linux = &term =~ "linux"
+let s:is_using_colorful_term=s:is_using_term_xterm ||
+                            \s:is_using_term_rxvt ||
+                            \s:is_using_term_screen
+
+if exists('$TMUX')
+    set clipboard=
+endif
+"}
+
+" CATEGORY: Config OS"{
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+if s:is_running_win
     " For Windows
     " -----------
     set shellslash
@@ -59,11 +86,11 @@ else
 
 endif
 
-if s:ismacunix
+if s:is_running_macunix
     set clipboard=unnamed
 endif
 
-if !s:iswin
+if !s:is_running_win
     set shell=/bin/bash
 endif
 "}
@@ -279,9 +306,9 @@ if !exists("g:override_billinux_bundles")
 " CATEGORY: SQL"{
 " -------------------------------------
 if count(g:billinux_bundle_groups, 'sql')
-if !exists('g:billinux_no_extra_bundles')
-NeoBundle 'vim-scripts/dbext.vim'
-endif
+    if !exists('g:billinux_no_extra_bundles')
+        NeoBundle 'vim-scripts/dbext.vim'
+    endif
 endif
 "}
 
@@ -371,6 +398,7 @@ endif
 
     if count(g:billinux_bundle_groups, 'misc')
         NeoBundle 'tpope/vim-markdown'
+        NeoBundle "chrisbra/csv.vim"
     endif
 "}
 
@@ -563,7 +591,7 @@ endfunction
 set encoding=utf-8
 set fileformats=unix,dos,mac
 
-if s:iswin
+if s:is_running_win
     if has('multi_byte')
         set termencoding=cp850
         setglobal fileencoding=utf-8
@@ -613,7 +641,7 @@ let ruby_operators = 1
 " Gui setting"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-if s:isgui
+if s:is_running_gui
     set antialias
     set lines=60
     set columns=120
@@ -630,18 +658,18 @@ if s:isgui
     set guioptions-=e
 
     " Font to run vim-airline (cf.: vim-airline config.
-    if s:linux || s:iscygwin
+    if s:is_running_linux || s:is_running_cygwin
         set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h11
         "set guifont=Powerline\ Consolas\ 10
-    elseif s:ismacunix
+    elseif s:is_running_macunix
         set guifont=Powerline\ Consolas\ 10
         "set guifont=Menlo\ Regular\ for\ Powerline:h15
         "set guifont=Droid\ Sans\ Mono\ for \Powerline:h14
         "set guifont=Meslo\ LG\ for\ Powerline:h11
-    elseif s:iswin
+    elseif s:is_running_win
         set guifont=Powerline_Consolas:h10:cANSI
     endif
-elseif &term == 'dterm'
+elseif s:is_using_term_dterm
     set tsl=0
 elseif isdirectory(expand($VIMBUNDLE . "/csapprox"))
     " To avoid CSApprox workarounds in console
@@ -681,6 +709,8 @@ set splitright
 set splitbelow
 set tabpagemax=15
 set history=1024
+set nowrap
+set textwidth=0
 set whichwrap=b,s,h,l,<,>,[,]
 set title
 set virtualedit=onemore
@@ -689,14 +719,17 @@ set wildmenu
 set wildmode=list:longest,full
 set suffixes=.o,.h,.bak,.info,.log,~,.out
 set wildignorecase
-set wildignore+=*.swp,*.bak,*.pyc,*.class,*.o,*.obj,tags,*.bak,*~
+if s:is_running_win
+    set wildignore+=*\\..git\\.*,*\\..hg\\.*,*\\..svn\\.*,*\\.bin\\.*,*\pkg\\.*,*\\..bak\\.*,*\\..swp\\.*,*\\..class\\.*,*\\.tags\\.*,*\\..o\\.*
+else
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/bin/*,*/pkg/*,*/.bak/*,*/.swp/*,*/.class/*,*/tags/*,*/.o/*
+endif
 
 set foldenable
 set foldmarker={,}
 set foldmethod=marker
 set foldlevelstart=0
-set foldopen-=Search
-set foldopen-=undo
+set foldopen=block,hor,mark,percent,quickfix,tag,search
 
 " VERY useful to restore view
 set viewoptions=folds,options,cursor,unix,slash
@@ -999,7 +1032,7 @@ if isdirectory(expand($VIMBUNDLE . "/ctrlp"))
     let g:ctrlp_mruf_max = 250
 
     " On Windows use 'dir' as fallback command.
-    if s:iswin
+    if s:is_running_win
         let s:ctrlp_fallback = 'dir %s /-n /b /s /a-d'
     elseif executable('ag')
         let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
@@ -1853,6 +1886,13 @@ endif
 " -------------------------------------
 
 if isdirectory(expand($VIMBUNDLE . "/vim-markdown"))
+endif
+"}
+
+" PLUGIN: Csv"{
+" -------------------------------------"
+
+if isdirectory(expand($VIMBUNDLE . "/csv.vim"))
 endif
 "}
 
