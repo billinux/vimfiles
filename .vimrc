@@ -583,6 +583,30 @@ function ModeChange()"{
     endif
 endfunction
 "}
+
+" function! pastetoggle()"{
+function! WrapForTmux(s)
+    if !exists('$TMUX')
+    return a:s
+    endif
+
+    let tmux_start = "\<Esc>Ptmux;"
+    let tmux_end = "\<Esc>\\"
+
+    return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+
+function! XTermPasteBegin()
+    set pastetoggle=<Esc>[201~
+    set paste
+    return ""
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+"}
 "}
 
 " SECTION: Encoding"{
@@ -643,6 +667,7 @@ let ruby_operators = 1
 
 if s:is_running_gui
     set antialias
+    set mousehide
     set lines=60
     set columns=120
 
@@ -714,6 +739,7 @@ set textwidth=0
 set whichwrap=b,s,h,l,<,>,[,]
 set title
 set virtualedit=onemore
+set mouse=a
 
 set wildmenu
 set wildmode=list:longest,full
@@ -857,7 +883,7 @@ nnoremap <silent> k :<C-U>execute 'normal!' (v:count>1 ? "m'".v:count.'k' : 'gk'
 nnoremap <silent> j :<C-U>execute 'normal!' (v:count>1 ? "m'".v:count.'j' : 'gj')<Enter>
 
 "nnoremap q :q!<cr>
-"nnoremap <leader>q :qa!<cr>
+nnoremap <leader>q :qa!<cr>
 
 " To clear search highlighting rather than toggle it and off
 noremap <silent> <leader><space> :nohlsearch<CR>
@@ -867,7 +893,7 @@ nmap <silent> <leader>v :vsplit $MYVIMRC<CR>
 nmap <silent> <leader>s :source $MYVIMRC<CR>
 
 " Switch different kind line number
-nnoremap <leader>, :call NumberToggle()<cr>
+nnoremap <leader>; :call NumberToggle()<cr>
 
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>mm mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
@@ -945,6 +971,11 @@ map <Leader>= <C-w>=
 
 " write to a file using sudo
 cmap w!! %!sudo tee > /dev/null %
+
+" Change Working Directory to that of the current file
+cmap cwd lcd %:p:h
+cmap cd. lcd %:p:h
+
 "}
 
 " Mapmode-o"{
@@ -1161,6 +1192,10 @@ if isdirectory(expand($VIMBUNDLE . "/vim-airline"))
     let g:airline#extensions#tabline#enabled = 1
     "let g:airline_theme             = 'powerlineish'
     let g:airline_theme             = 'badwolf'
+    let g:airline_fugitive_prefix = '⎇'
+    let g:airline_paste_symbol = 'ρ'
+    " let g:airline_section_x = ''
+    " let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 
     " Cygwin terminal
     if has ('win32unix') && !has('gui_running')
@@ -1986,4 +2021,4 @@ endif
 "}
 
 set secure  " must be written at the last.  see :help 'secure'
-"}
+
