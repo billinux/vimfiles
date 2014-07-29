@@ -51,10 +51,10 @@ let s:is_running_gui = has("gui_running")
 " CATEGORY: Terminal"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-let s:is_using_term_xterm = &term =~ "xterm"
-let s:is_using_term_dterm = &term =~ "dterm"
-let s:is_using_term_rxvt = &term =~ "rxvt"
-let s:is_using_term_screen = &term =~ "screen"
+let s:is_using_term_xterm = &term =~ "xterm*"
+let s:is_using_term_dterm = &term =~ "dterm*"
+let s:is_using_term_rxvt = &term =~ "rxvt*"
+let s:is_using_term_screen = &term =~ "screen*"
 let s:is_using_term_linux = &term =~ "linux"
 let s:is_using_colorful_term=s:is_using_term_xterm ||
                             \s:is_using_term_rxvt ||
@@ -217,6 +217,7 @@ if !exists("g:override_billinux_bundles")
         NeoBundle 'Lokaltog/vim-easymotion'
         NeoBundle 'mhinz/vim-signify'
         NeoBundle 'spf13/vim-autoclose'
+        NeoBundle 'tpope/vim-abolish.git'
 
         if !exists('g:billinux_no_extra_bundles')
             NeoBundle 'tpope/vim-repeat'
@@ -226,7 +227,6 @@ if !exists("g:override_billinux_bundles")
             NeoBundle 'vim-scripts/sessionman.vim'
             NeoBundle 'jistr/vim-nerdtree-tabs'
             NeoBundle 'nathanaelkane/vim-indent-guides'
-            NeoBundle 'tpope/vim-abolish.git'
             NeoBundle 'osyo-manga/vim-over'
             NeoBundle 'kana/vim-textobj-user'
             NeoBundle 'kana/vim-textobj-indent'
@@ -1308,6 +1308,22 @@ if isdirectory(expand($VIMBUNDLE . "/vim-signify"))
     let g:signify_sign_color_inherit_from_linenr=1
 endif
 "}
+
+" PLUGIN: AutoClose"{
+" -------------------------------------"
+
+" Comment will not be paired
+if isdirectory(expand($VIMBUNDLE . "/vim-autoclose"))
+    let g:autoclose_vim_commentmode = 1
+endif
+"}
+
+" PLUGIN: Abolish"{
+" -------------------------------------"
+
+if isdirectory(expand($VIMBUNDLE . "/vim-abolish"))
+endif
+"}
 "}
 
 " CATEGORY: Writing"{
@@ -1781,7 +1797,7 @@ endif
 
 "}
 
-" Python"{
+" CATEGORY: Python"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " PLUGIN: PyMode
@@ -1923,7 +1939,8 @@ else
     " ---------------
     if count(g:billinux_color_groups, 'molokai')
         if isdirectory(expand($VIMBUNDLE . "/molokai"))
-            let g:molokai_original = 1
+            let g:molokai_background = 236
+            "let g:molokai_original = 1
             colorscheme molokai
         endif
     endif
