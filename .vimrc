@@ -176,7 +176,7 @@ endif
 " In your .vimrc.before.local file
 " list only the plugin groups you will use
 if !exists('g:billinux_bundle_groups')
-    let g:billinux_bundle_groups=['general', 'writing', 'neocomplcache', 'programming', 'php', 'sql', 'ruby', 'python', 'javascript', 'html', 'twig', 'css', 'colors', 'misc',]
+    let g:billinux_bundle_groups=['general', 'writing', 'neocomplcache', 'programming','c', 'php', 'sql', 'ruby', 'python', 'javascript', 'html', 'twig', 'css', 'colors', 'misc',]
 endif
 
 " To override all the included bundles, add the following to your
@@ -248,7 +248,7 @@ if !exists("g:override_billinux_bundles")
     endif
 "}
 
-    " CATEGORY: General programming"{
+    " CATEGORY: Programming"{
 " ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'programming')
@@ -296,6 +296,17 @@ if !exists("g:override_billinux_bundles")
         NeoBundle 'Rip-Rip/clang_complete'
     endif
 "}
+
+" " PLUGIN: C
+" -------------------------------------
+
+    if count(g:billinux_bundle_groups, 'c')
+        NeoBundle 'rhysd/vim-clang-format'
+        NeoBundle 'vim-scripts/DoxygenToolkit.vim'
+        if !exists('g:billinux_no_extra_bundles')
+            NeoBundle 'justmao945/vim-clang'
+        endif
+    endif
 
     " CATEGORY: PHP"{
 " ---------------------------------------
@@ -354,7 +365,7 @@ endif
     endif
 "}
 
-    " CATEGORY: Twig template"{
+    " CATEGORY: Twig"{
 " ---------------------------------------
 
     if count(g:billinux_bundle_groups, 'twig')
@@ -470,8 +481,18 @@ augroup Programming
     au BufRead,BufNewFile *.html set softtabstop=2
     au BufRead,BufNewFile *.html set tabstop=2
     au FileType c,cpp,java,go,php,javascript,python,twig,xml,yml,perl autocmd BufWritePre <buffer> if !exists('g:billinux_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
+
     au BufRead * normal zR
     au BufRead *.vimrc normal zM
+augroup END
+"}
+
+" Project"{
+" ---------------------------------------
+
+augroup project
+    au!
+    au BufRead,BufNewFile *.h,*.c set filetype=c.doxygen
 augroup END
 "}
 
@@ -740,6 +761,8 @@ set ruler
 set fillchars+=stl:\ ,stlnc:\
 set laststatus=2
 set noshowmode
+set colorcolumn=110
+highlight ColorColumn ctermbg=darkgray
 
 set cursorline
 autocmd WinLeave * setlocal nocursorline
@@ -763,6 +786,9 @@ set whichwrap=b,s,h,l,<,>,[,]
 set title
 set virtualedit=onemore
 "set mouse=a
+
+"Forces vim to source .vimrc file
+set exrc
 
 set wildmenu
 set wildmode=list:longest,full
@@ -879,6 +905,9 @@ xnoremap ; <Nop>
 " Mapmode-Fn"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
+" To export syntax highlighted code in html format.
+map <F1> :runtime! syntax/2html.vim
+
 " Map <F11> to / (search) and Ctrl-<F11> to ? (backwards search)
 map <F11> /
 map <C-F11> ?
@@ -909,7 +938,7 @@ nnoremap <silent> j :<C-U>execute 'normal!' (v:count>1 ? "m'".v:count.'j' : 'gj'
 nnoremap <leader>q :qa!<cr>
 
 " To clear search highlighting rather than toggle it and off
-noremap <silent> <leader><space> :nohlsearch<CR>
+noremap <silent> <leader><space> :noh<CR>
 
 " Resource configuration editing.
 nmap <silent> <leader>v :vsplit $MYVIMRC<CR>
@@ -975,11 +1004,6 @@ nnoremap zO zCzOzz
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 " Window navigation
-"map <C-j> <C-W>j
-"map <C-k> <C-W>k
-"map <C-h> <C-W>h
-"map <C-l> <C-W>l
-
 map <C-J> <C-W>j<C-W>_
 map <C-k> <C-W>k<C-W>_
 map <C-h> <C-W>h<C-W>_
@@ -1117,7 +1141,7 @@ if isdirectory(expand($VIMBUNDLE . "/ctrlp"))
 endif
 "}
 
-" APPLICATION: ag: the silver searcher"{
+" PLUGIN: Ag"{
 " -------------------------------------"
 if executable('ag')
     " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
@@ -1213,11 +1237,9 @@ endif
 
 if isdirectory(expand($VIMBUNDLE . "/vim-airline"))
     let g:airline#extensions#tabline#enabled = 1
-    "let g:airline_theme             = 'powerlineish'
     let g:airline_theme             = 'badwolf'
     let g:airline_fugitive_prefix = '⎇'
     let g:airline_paste_symbol = 'ρ'
-    " let g:airline_section_x = ''
     " let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 
     " Cygwin terminal
@@ -1758,6 +1780,44 @@ endif
 
 "}
 
+" CATEGORY: C"{
+" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+" http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
+"let &path.="src/include,/usr/include,"
+""='-I'.substitute(&path, ',', '\n-I', 'g')<CR>p
+set makeprg=make\ -C\ ../build\ -j9
+nnoremap <F4> :make!<cr>
+
+" PLUGIN: Vim-clang"{
+" -------------------------------------
+
+if isdirectory(expand($VIMBUNDLE . "/vim-clang"))
+endif
+"}
+
+" PLUGIN: Vim-clang-format"{
+" -------------------------------------
+
+if isdirectory(expand($VIMBUNDLE . "/vim-clang-format"))
+endif
+"}
+
+" PLUGIN: DoxygenToolkit"{
+" -------------------------------------
+
+if isdirectory(expand($VIMBUNDLE . "/DoxygenToolkit.vim"))
+    let g:DoxygenToolkit_briefTag_pre="@Synopsis  "
+    let g:DoxygenToolkit_paramTag_pre="@Param "
+    let g:DoxygenToolkit_returnTag="@Returns   "
+    let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
+    let g:DoxygenToolkit_blockFooter="----------------------------------------------------------------------------"
+    let g:DoxygenToolkit_authorName="Bill Linux"
+    let g:DoxygenToolkit_licenseTag="My own license" 
+endif
+"}
+
+"}
 " CATEGORY: PHP"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -1850,7 +1910,7 @@ endif
 
 "}
 
-" Twig"{
+" CATEGORY: Twig"{
 " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
